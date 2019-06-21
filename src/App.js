@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import './App.css';
+import classes from './App.css';
 import Person from './Person/Person';
 import Validate from './ValidationComponent';
+
 
 
 class App extends Component {
@@ -23,7 +24,7 @@ this.setState({persons: people})
 
 nameChangedHandler = (event, id) => {
 const personIndex = this.state.persons.findIndex(p => {
-  return p.id === id;
+  return p.id == id;
 });
 
 const person = {...this.state.persons[personIndex]};
@@ -65,21 +66,13 @@ this.setState({showPeople: !doesShow});
 }
 
 render(){
-  const style = {
-    backgroundColor: 'green',
-    color: 'white',
-    font: 'inherit',
-    border: '1px solid blue',
-    padding: '8px',
-    cursor: 'pointer', 
-  }
-
   let people = null;
+  let btnClass ='';
   if(this.state.showPeople){
     people = (
       <div >
         {this.state.persons.map((person, index) => {
-          return <Person 
+          return<Person 
                   click={()=>this.deletePersonHandler(index)}
                   name={person.name} 
                   age={person.age}
@@ -88,24 +81,24 @@ render(){
         })}
      </div>
     );
-    style.backgroundColor = 'red';
- 
+    
+    btnClass = classes.Red;   
   }
-  let classes = [];
+  let assignedClasses = [];
    
   if(this.state.persons.length <= 2 ){
-   classes.push('red'); 
+   assignedClasses.push(classes.red); 
   }
   if(this.state.persons.length <= 1){
-    classes.push('bold');
+    assignedClasses.push(classes.bold);
   }
 
   return (
  
-    <div className="App">
-          <h1 className={classes.join(' ')}>Hi I am learning React JS</h1>
-          <button 
-          style={style}
+    <div className={classes.App}>
+          <h1 className={assignedClasses.join(' ')}>Hi I am learning React JS</h1>
+          <button
+          className={btnClass}
           onClick={this.togglePersonHandler}
           >Show People
           </button>    
