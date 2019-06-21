@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
 import './App.css';
 import Person from './Person/Person';
+import Validate from './ValidationComponent';
+
 
 class App extends Component {
 state = {
   persons: [
-    {name: 'Christina', age: 40},
-    {name: 'Jan Paul', age: 44},
-    {name: 'Annelies', age: 46}
+    {id: '1', name: 'Christina', age: 40},
+    {id: '2', name: 'Jan Paul', age: 44},
+    {id: '3', name: 'Annelies', age: 46}
   ],
-  showPeople: false
+  showPeople: false,
+  text: {value:'', string: ''}
 };
 
 deletePersonHandler = (personIndex) => {
@@ -18,15 +21,44 @@ people.splice(personIndex, 1);
 this.setState({persons: people})
 }
 
-nameChangedHandler = (event) => {
+nameChangedHandler = (event, id) => {
+const personIndex = this.state.persons.findIndex(p => {
+  return p.id === id;
+});
+
+const person = {...this.state.persons[personIndex]};
+
+person.name = event.target.value;
+const persons = [...this.state.persons];
+person[personIndex] = person;
+
   this.setState({
-    persons:[
-      {name: 'Christina', age: 40},
-      {name: event.target.value, age: 44},
-     {name: 'Annelies', age: 46}
-    ]
+    persons: persons
   });
 }
+
+lengthChange = (event) => {
+let text = event.target.value;
+let  stringLength = event.target.value.length;
+const stateText = {...this.state.text};
+
+stateText.value = text;
+if(stringLength>5){
+  stateText.string = "Text is long enough";
+}else if(stringLength<=5){
+  stateText.string = "Text is too short";
+}
+
+this.setState({
+text: stateText
+});
+
+
+this.setState({
+ 
+});
+}
+
 togglePersonHandler = () => {
 const doesShow = this.state.showPeople;
 this.setState({showPeople: !doesShow});
@@ -34,11 +66,12 @@ this.setState({showPeople: !doesShow});
 
 render(){
   const style = {
-    backgroundColor: 'white',
+    backgroundColor: 'green',
+    color: 'white',
     font: 'inherit',
     border: '1px solid blue',
     padding: '8px',
-    cursor: 'pointer'
+    cursor: 'pointer', 
   }
 
   let people = null;
@@ -49,21 +82,42 @@ render(){
           return <Person 
                   click={()=>this.deletePersonHandler(index)}
                   name={person.name} 
-                  age={person.age}/>
+                  age={person.age}
+                  key = {person.id}
+                  changed = {(event) => this.nameChangedHandler(event, person.id)}/>
         })}
      </div>
     );
+    style.backgroundColor = 'red';
+ 
   }
+  let classes = [];
+   
+  if(this.state.persons.length <= 2 ){
+   classes.push('red'); 
+  }
+  if(this.state.persons.length <= 1){
+    classes.push('bold');
+  }
+
   return (
+ 
     <div className="App">
-      <h1>Hi I am learning React JS</h1>
-      <button 
-      style={style}
-      onClick={this.togglePersonHandler}
-      >Show People
-      </button>    
-      {people}
+          <h1 className={classes.join(' ')}>Hi I am learning React JS</h1>
+          <button 
+          style={style}
+          onClick={this.togglePersonHandler}
+          >Show People
+          </button>    
+          {people}
+          <Validate
+                text={this.state.text.value}
+                changed={(event) => this.lengthChange(event)}
+                stringLength = {this.state.text.string}
+              />
     </div>
+      
+ 
   );
 }
     
