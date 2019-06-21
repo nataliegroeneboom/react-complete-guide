@@ -12,14 +12,10 @@ state = {
   showPeople: false
 };
 
-switchNameHandler = (newName) => {
- this.setState({
-    persons:[
-      {name: newName, age: 40},
-      {name: 'Jan Paul', age: 44},
-     {name: 'Annelies', age: 46}
-    ]
-  });
+deletePersonHandler = (personIndex) => {
+const people = [...this.state.persons];
+people.splice(personIndex, 1);
+this.setState({persons: people})
 }
 
 nameChangedHandler = (event) => {
@@ -44,6 +40,20 @@ render(){
     padding: '8px',
     cursor: 'pointer'
   }
+
+  let people = null;
+  if(this.state.showPeople){
+    people = (
+      <div >
+        {this.state.persons.map((person, index) => {
+          return <Person 
+                  click={()=>this.deletePersonHandler(index)}
+                  name={person.name} 
+                  age={person.age}/>
+        })}
+     </div>
+    );
+  }
   return (
     <div className="App">
       <h1>Hi I am learning React JS</h1>
@@ -51,26 +61,8 @@ render(){
       style={style}
       onClick={this.togglePersonHandler}
       >Show People
-      </button>
-      { this.state.showPeople ?
-          <div >
-              <Person 
-                  name={this.state.persons[0].name} 
-                  age={this.state.persons[0].age}>My Hobbies: Gardening
-              </Person>
-              <Person 
-                  name={this.state.persons[1].name} 
-                  age={this.state.persons[1].age}
-                  click={this.switchNameHandler.bind(this, 'Teenie!')}
-                  changed={this.nameChangedHandler}>My Hobbies: Golf
-              </Person>
-              <Person 
-                  name={this.state.persons[2].name} 
-                  age={this.state.persons[2].age}>My Hobbies: Crochet
-              </Person>
-          </div>: null
-      }
-     
+      </button>    
+      {people}
     </div>
   );
 }
