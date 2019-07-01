@@ -6,6 +6,10 @@ import Validate from '../ValidationComponent';
 
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    console.log('[App.js] constructor');
+  }
 state = {
   persons: [
     {id: '1', name: 'Christina', age: 40},
@@ -15,6 +19,11 @@ state = {
   showPeople: false,
   text: {value:'', string: ''}
 };
+
+static getDerivedStateFromProps(props, state){
+  console.log('[App.js] getDerivedStateFromProps', props);
+   return state;
+}
 
 deletePersonHandler = (personIndex) => {
 const people = [...this.state.persons];
@@ -39,25 +48,21 @@ person[personIndex] = person;
 }
 
 lengthChange = (event) => {
-let text = event.target.value;
-let  stringLength = event.target.value.length;
-const stateText = {...this.state.text};
+    let text = event.target.value;
+    let  stringLength = event.target.value.length;
+    const stateText = {...this.state.text};
 
-stateText.value = text;
-if(stringLength>5){
-  stateText.string = "Text is long enough";
-}else if(stringLength<=5){
-  stateText.string = "Text is too short";
-}
+    stateText.value = text;
+    if(stringLength>5){
+      stateText.string = "Text is long enough";
+    }else if(stringLength<=5){
+      stateText.string = "Text is too short";
+    }
 
-this.setState({
-text: stateText
-});
+    this.setState({
+    text: stateText
+    });
 
-
-this.setState({
- 
-});
 }
 
 togglePersonHandler = () => {
@@ -66,18 +71,19 @@ this.setState({showPeople: !doesShow});
 }
 
 render(){
+  console.log('rendering');
   let people = null;
   let btnClass ='';
   if(this.state.showPeople){
     people = (
       <div >
         {this.state.persons.map((person, index) => {
-          return<Person 
-                  click={()=>this.deletePersonHandler(index)}
-                  name={person.name} 
-                  age={person.age}
-                  key = {person.id}
-                  changed = {(event) => this.nameChangedHandler(event, person.id)}/>
+          return <Person 
+                    click={()=>this.deletePersonHandler(index)}
+                    name={person.name} 
+                    age={person.age}
+                    key = {person.id}
+                    changed = {(event) => this.nameChangedHandler(event, person.id)}/>
         })}
      </div>
     );
